@@ -22,12 +22,9 @@
 #include "qwinwidget.h"
 
 #include <qt_windows.h>
-
-#if QT_VERSION >= 0x050000
 #include <QWindow>
 #include <qpa/qplatformnativeinterface.h>
 #define QT_WA(unicode, ansi) unicode
-#endif
 
 /*!
     \class QWinWidget qwinwidget.h
@@ -86,24 +83,16 @@ void QWinWidget::init()
     Q_ASSERT(hParent);
 
     if (hParent) {
-#if QT_VERSION >= 0x050000
         setProperty("_q_embedded_native_parent_handle", WId(hParent));
-#endif
-	// make the widget window style be WS_CHILD so SetParent will work
-	QT_WA({
-        SetWindowLong((HWND)winId(), GWL_STYLE, WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
-	}, {
-        SetWindowLongA((HWND)winId(), GWL_STYLE, WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
-	})
-#if QT_VERSION >= 0x050000
+
+        // make the widget window style be WS_CHILD so SetParent will work
+        QT_WA({ SetWindowLong((HWND)winId(), GWL_STYLE, WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);
+        }, {SetWindowLongA((HWND)winId(), GWL_STYLE, WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS);})
+
         QWindow *window = windowHandle();
-        HWND h = static_cast<HWND>(QGuiApplication::platformNativeInterface()->
-                                nativeResourceForWindow("handle", window));
+        HWND h = static_cast<HWND>(QGuiApplication::platformNativeInterface()->nativeResourceForWindow("handle", window));
         SetParent(h, hParent);
         window->setFlags(Qt::FramelessWindowHint);
-#else
-        SetParent(winId(), hParent);
-#endif
         QEvent e(QEvent::EmbeddingControl);
         QApplication::sendEvent(this, &e);
     }

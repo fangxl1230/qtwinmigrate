@@ -7,7 +7,12 @@
 #ifndef QWINHOST_H
 #define QWINHOST_H
 
+#include <QtGlobal>
+#if QT_VERSION_MAJOR >= 6
+#include <QtWidgets/QWidget>
+#else
 #include <QWidget>
+#endif
 
 #if defined(Q_OS_WIN)
 #  if !defined(QT_QTWINMIGRATE_EXPORT) && !defined(QT_QTWINMIGRATE_IMPORT)
@@ -29,7 +34,7 @@ class QT_QTWINMIGRATE_EXPORT QWinHost : public QWidget
 {
     Q_OBJECT
 public:
-    QWinHost(QWidget *parent = 0, Qt::WindowFlags f = 0);
+    QWinHost(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     ~QWinHost();
 
     void setWindow(HWND);
@@ -43,7 +48,9 @@ protected:
     void focusInEvent(QFocusEvent*);
     void resizeEvent(QResizeEvent*);
 
-#if QT_VERSION >= 0x050000
+#if QT_VERSION_MAJOR >= 6
+    bool nativeEvent(const QByteArray &eventType, void *message, qintptr *result);
+#elif QT_VERSION_MAJOR == 5
     bool nativeEvent(const QByteArray &eventType, void *message, long *result);
 #else
     bool winEvent(MSG *msg, long *result);

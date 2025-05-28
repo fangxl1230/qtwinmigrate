@@ -7,7 +7,12 @@
 #ifndef QMFCAPP_H
 #define QMFCAPP_H
 
+#include <QtGlobal>
+#if QT_VERSION_MAJOR >= 6
+#include <QtWidgets/QApplication>
+#else
 #include <QApplication>
+#endif
 
 #if defined(_AFXDLL) && defined(_MSC_VER)
 #define QTWINMIGRATE_WITHMFC
@@ -37,7 +42,11 @@ class QT_QTWINMIGRATE_EXPORT QMfcAppEventFilter : public QAbstractNativeEventFil
 {
 public:
     QMfcAppEventFilter();
+#if QT_VERSION_MAJOR >= 6
+    bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result);
+#else
     bool nativeEventFilter(const QByteArray &eventType, void *message, long *result);
+#endif
 };
 #endif
 
@@ -53,8 +62,11 @@ public:
 #endif
     QMfcApp(int &argc, char **argv);
     ~QMfcApp();
-
+#if QT_VERSION_MAJOR >= 6
+    bool winEventFilter(MSG *msg, qintptr *result);
+#else
     bool winEventFilter(MSG *msg, long *result);
+#endif
 
     static void enterModalLoop();
     static void exitModalLoop();

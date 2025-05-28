@@ -18,7 +18,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_LBUTTONUP:
 	{
-	    QWinWidget w(hWnd, 0, 0);
+        QWinWidget w(hWnd, nullptr, Qt::WindowFlags());
 	    w.showCentered();
 	    QMessageBox mb("Qt on Win32 - modal",
 		"Is this dialog modal?",
@@ -33,7 +33,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_RBUTTONUP:
 	{
-	    QWinWidget *w = new QWinWidget(hWnd, 0, 0);
+        QWinWidget *w = new QWinWidget(hWnd, nullptr, Qt::WindowFlags());
 	    w->showCentered();
 	    QMessageBox *mb = new QMessageBox("Qt on Win32 - modeless",
 		"Is this dialog modal?",
@@ -123,7 +123,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
     winId = (HWND)win.winId();
     QHBoxLayout hbox(&win);
     hbox.setSpacing(5);
-    hbox.setMargin(0);
+    hbox.setContentsMargins(0, 0, 0, 0);
     QPushButton *pb = new QPushButton("Qt command button", &win);
     pb->setObjectName("pb");
     hbox.addWidget(pb);

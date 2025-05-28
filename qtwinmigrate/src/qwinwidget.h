@@ -7,7 +7,12 @@
 #ifndef QWINWIDGET_H
 #define QWINWIDGET_H
 
+#include <QtGlobal>
+#if QT_VERSION_MAJOR >= 6
+#include <QtWidgets/QWidget>
+#else
 #include <QWidget>
+#endif
 #include "qmfcapp.h"
 
 class CWnd;
@@ -32,9 +37,9 @@ class QT_QTWINMIGRATE_EXPORT QWinWidget : public QWidget
 {
     Q_OBJECT
 public:
-    QWinWidget( HWND hParentWnd, QObject *parent = 0, Qt::WindowFlags f = 0 );
+    QWinWidget( HWND hParentWnd, QObject *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 #ifdef QTWINMIGRATE_WITHMFC
-    QWinWidget( CWnd *parnetWnd, QObject *parent = 0, Qt::WindowFlags f = 0 );
+    QWinWidget( CWnd *parnetWnd, QObject *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 #endif
     ~QWinWidget();
 

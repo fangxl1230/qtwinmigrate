@@ -47,10 +47,10 @@
     after the native window has been created, i.e. do not call 
     QWidget::setParent or move the QWinHost into a different layout.
 */
-QWinHost::QWinHost(QWidget *parent, Qt::WindowFlags f)
-: QWidget(parent, f), wndproc(0),own_hwnd(false), hwnd(0)
-{
+QWinHost::QWinHost(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f), wndproc(0),own_hwnd(false), hwnd(0) {
+    #if QT_VERSION_MAJOR < 6
     setAttribute(Qt::WA_NoBackground);
+    #endif
     setAttribute(Qt::WA_NoSystemBackground);
 }
 
@@ -298,7 +298,9 @@ void QWinHost::resizeEvent(QResizeEvent *e)
 /*!
     \reimp
 */
-#if QT_VERSION >= 0x050000
+#if QT_VERSION_MAJOR >= 6
+bool QWinHost::nativeEvent(const QByteArray &eventType, void *message, qintptr *result)
+#elif QT_VERSION_MAJOR == 5
 bool QWinHost::nativeEvent(const QByteArray &eventType, void *message, long *result)
 #else
 bool QWinHost::winEvent(MSG *msg, long *result)

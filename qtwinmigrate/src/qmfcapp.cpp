@@ -11,11 +11,16 @@
 #undef UNICODE
 #endif
 
+#include <QtGlobal>
 #include "qmfcapp.h"
 
 #include <QEventLoop>
 #include <QAbstractEventDispatcher>
+#if QT_VERSION_MAJOR >= 6
+#include <QtWidgets/QWidget>
+#else
 #include <QWidget>
+#endif
 
 #ifdef QTWINMIGRATE_WITHMFC
 #include <afxwin.h>
@@ -35,8 +40,11 @@ int QMfcApp::mfc_argc = 0;
 QMfcAppEventFilter::QMfcAppEventFilter() : QAbstractNativeEventFilter()
 {
 }
-
+#if QT_VERSION_MAJOR >= 6
+bool QMfcAppEventFilter::nativeEventFilter(const QByteArray &, void *message, qintptr *result)
+#else
 bool QMfcAppEventFilter::nativeEventFilter(const QByteArray &, void *message, long *result)
+#endif
 {
     return static_cast<QMfcApp*>(qApp)->winEventFilter((MSG*)message, result);
 }
@@ -366,7 +374,11 @@ QMfcApp::~QMfcApp()
 /*!
     \reimp
 */
+#if QT_VERSION_MAJOR >= 6
+bool QMfcApp::winEventFilter(MSG *msg, qintptr *result)
+#else
 bool QMfcApp::winEventFilter(MSG *msg, long *result)
+#endif
 {
     static bool recursion = false;
     if (recursion)
